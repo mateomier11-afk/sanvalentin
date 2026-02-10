@@ -222,10 +222,14 @@ setInterval(() => {
 
 /* 📸 Fotos cayendo */
 const fotos = ["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"];
+let indiceFoto = 0;
 
 setInterval(() => {
     let img = document.createElement("img");
-   img.src = fotos[Math.floor(Math.random()*fotos.length)];
+  img.src = fotos[indiceFoto];
+indiceFoto++;
+if (indiceFoto >= fotos.length) indiceFoto = 0;
+
 
     img.className = "photo";
     img.style.left = Math.random() * 80 + "vw";
@@ -248,4 +252,5 @@ function finalLove() {
 
 </body>
 </html>
+
 
