@@ -225,7 +225,8 @@ const fotos = ["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"];
 
 setInterval(() => {
     let img = document.createElement("img");
-    img.src = "imagenes/" + fotos[Math.floor(Math.random()*fotos.length)];
+   img.src = fotos[Math.floor(Math.random()*fotos.length)];
+
     img.className = "photo";
     img.style.left = Math.random() * 80 + "vw";
     img.style.animationDuration = (Math.random() * 5 + 6) + "s";
@@ -247,3 +248,4 @@ function finalLove() {
 
 </body>
 </html>
+
