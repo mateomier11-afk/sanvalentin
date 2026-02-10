@@ -26,7 +26,6 @@ body {
     overflow: hidden;
 }
 
-/* Fondo animado */
 @keyframes bgMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -42,7 +41,8 @@ body {
     padding: 30px;
     text-align: center;
     animation: fade 0.8s ease forwards;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    z-index: 2;
 }
 
 .active {
@@ -70,8 +70,7 @@ button {
     color: white;
     font-size: 16px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 10px 20px rgba(0,0,0,.2);
+    transition: transform 0.2s;
 }
 
 button:hover {
@@ -80,11 +79,10 @@ button:hover {
 
 .error {
     color: red;
-    margin-top: 10px;
     display: none;
 }
 
-/* Corazones flotando */
+/* ❤️ Corazones */
 .heart {
     position: absolute;
     font-size: 20px;
@@ -92,23 +90,35 @@ button:hover {
     opacity: 0.8;
 }
 
-.sparkle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: rgba(255,255,255,0.8);
-    border-radius: 50%;
-    animation: sparkle 5s linear infinite;
-}
-
 @keyframes float {
     from { transform: translateY(100vh) scale(0.5); opacity: 1; }
     to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
 }
 
-@keyframes sparkle {
-    from { transform: translateY(100vh); opacity: 1; }
-    to { transform: translateY(-10vh); opacity: 0; }
+/* 📸 Fotos flotando */
+.photo {
+    position: absolute;
+    width: 120px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+    animation: photoFall linear infinite;
+    filter: blur(0.5px);
+    opacity: 0.9;
+    z-index: 1;
+}
+
+@keyframes photoFall {
+    from {
+        transform: translateY(-150px) rotate(-5deg);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    to {
+        transform: translateY(110vh) rotate(5deg);
+        opacity: 0;
+    }
 }
 
 @keyframes fade {
@@ -131,7 +141,7 @@ button:hover {
 <!-- INTRO -->
 <div class="screen" id="screen1">
     <h1>💞</h1>
-    <p>Ok… pero primero tenés que demostrar cuánto sabés de nosotros 😏</p>
+    <p>Primero una prueba…</p>
     <button onclick="next()">Empezar</button>
 </div>
 
@@ -143,7 +153,7 @@ button:hover {
     <button onclick="answer('ambar')">Ámbar</button>
     <button onclick="answer('ambos')">Ambos</button>
 
-    <p class="error" id="error">Mmm… esa no era 😜 probá otra vez</p>
+    <p class="error" id="error">Nooo 😜 probá otra</p>
 </div>
 
 <!-- FINAL -->
@@ -151,19 +161,19 @@ button:hover {
     <h1>🎉</h1>
     <p id="scoreText"></p>
     <h1>Hoy tenemos una cita</h1>
-    <p><strong>📍 EN:<br>ACÁ PONÉ EL LUGAR</strong></p>
-    <p>Preparate… porque va a ser inolvidable ✨</p>
+    <p><strong>📍 ACÁ PONÉ EL LUGAR</strong></p>
     <button onclick="finalLove()">Te amo 💕</button>
 </div>
 
 <script>
 let current = 0;
 let score = 0;
+let quizIndex = 0;
 
 const quiz = [
     { q: "¿Quién dio el primer beso?", a: "mateo" },
-    { q: "¿Quién fue el primero que se interesó en el otro?", a: "ambos" },
-    { q: "¿Quién dijo primero te amo?", a: "mateo" },
+    { q: "¿Quién se interesó primero?", a: "ambos" },
+    { q: "¿Quién dijo te amo primero?", a: "mateo" },
     { q: "¿Quién es más caprichoso?", a: "ambar" },
     { q: "¿Quién es más sensible?", a: "ambar" },
     { q: "¿Quién es más gordo?", a: "mateo" },
@@ -172,13 +182,10 @@ const quiz = [
     { q: "¿Quién es más divertido?", a: "mateo" }
 ];
 
-let quizIndex = 0;
-
 function next() {
     document.getElementById("screen" + current).classList.remove("active");
     current++;
     document.getElementById("screen" + current).classList.add("active");
-
     if (current === 2) loadQuestion();
 }
 
@@ -187,47 +194,50 @@ function loadQuestion() {
     document.getElementById("error").style.display = "none";
 }
 
-function answer(option) {
-    if (option === quiz[quizIndex].a) {
+function answer(opt) {
+    if (opt === quiz[quizIndex].a) {
         score++;
         quizIndex++;
-        if (quizIndex < quiz.length) {
-            loadQuestion();
-        } else {
+        if (quizIndex < quiz.length) loadQuestion();
+        else {
             document.getElementById("screen2").classList.remove("active");
             document.getElementById("screen3").classList.add("active");
             document.getElementById("scoreText").innerText =
-                `Acertaste ${score} de ${quiz.length} 💖  
-                ${score === quiz.length ? "Claramente somos almas gemelas 😍" : "Igual te amo eh 😘"}`;
+                `Acertaste ${score} de ${quiz.length} 💖`;
         }
     } else {
         document.getElementById("error").style.display = "block";
     }
 }
 
-/* Fondo animado constante */
+/* ❤️ Corazones */
 setInterval(() => {
     let h = document.createElement("div");
     h.className = "heart";
     h.style.left = Math.random() * 100 + "vw";
-    h.style.animationDuration = (Math.random() * 3 + 4) + "s";
     h.innerHTML = "❤️";
     document.body.appendChild(h);
     setTimeout(() => h.remove(), 7000);
+}, 700);
 
-    let s = document.createElement("div");
-    s.className = "sparkle";
-    s.style.left = Math.random() * 100 + "vw";
-    document.body.appendChild(s);
-    setTimeout(() => s.remove(), 5000);
-}, 600);
+/* 📸 Fotos cayendo */
+const fotos = ["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"];
+
+setInterval(() => {
+    let img = document.createElement("img");
+    img.src = "imagenes/" + fotos[Math.floor(Math.random()*fotos.length)];
+    img.className = "photo";
+    img.style.left = Math.random() * 80 + "vw";
+    img.style.animationDuration = (Math.random() * 5 + 6) + "s";
+    document.body.appendChild(img);
+    setTimeout(() => img.remove(), 12000);
+}, 2000);
 
 function finalLove() {
     for (let i = 0; i < 30; i++) {
         let h = document.createElement("div");
         h.className = "heart";
         h.style.left = Math.random() * 100 + "vw";
-        h.style.animationDuration = "3s";
         h.innerHTML = "❤️";
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 3000);
